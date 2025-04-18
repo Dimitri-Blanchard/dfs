@@ -27,18 +27,18 @@ from rich.filesize import decimal as filesize_decimal
 
 console = Console()
 
-# Configuration globale
+                       
 CONFIG = {
     "theme": "monokai",
     "show_hidden": False,
-    "sort_by": "name",  # name, type, size, date
+    "sort_by": "name",                          
     "reverse_sort": False,
-    "preview_size": 2000,  # max caractères pour la prévisualisation
+    "preview_size": 2000,                                           
     "recent_paths": [],
     "favorites": [],
 }
 
-# Extensions et leurs icônes
+                            
 FILE_ICONS = {
     ".py": "🐍",
     ".js": "📜",
@@ -77,13 +77,13 @@ FILE_ICONS = {
 }
 
 def get_file_info(path):
-    """Récupère des informations détaillées sur un fichier."""
+                                                              
     try:
         stat = os.stat(path)
         size = stat.st_size
         modified = datetime.fromtimestamp(stat.st_mtime)
         
-        # Type MIME
+                   
         mime_type, _ = mimetypes.guess_type(path)
         if mime_type is None:
             if os.access(path, os.X_OK):
@@ -91,7 +91,7 @@ def get_file_info(path):
             else:
                 mime_type = "application/octet-stream"
                 
-        # Icône basée sur l'extension
+                                     
         extension = os.path.splitext(path)[1].lower()
         icon = FILE_ICONS.get(extension, "📄")
         
@@ -116,7 +116,7 @@ def get_file_info(path):
         }
 
 def format_size(size):
-    """Formate une taille en octets de façon lisible."""
+                                                        
     for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
         if size < 1024.0:
             return f"{size:.1f} {unit}"
@@ -124,7 +124,7 @@ def format_size(size):
     return f"{size:.1f} PB"
 
 def calculate_hash(path, algorithm="md5"):
-    """Calcule le hash d'un fichier."""
+                                       
     hash_obj = hashlib.new(algorithm)
     try:
         with open(path, "rb") as f:
@@ -135,13 +135,13 @@ def calculate_hash(path, algorithm="md5"):
         return "Impossible de calculer le hash"
 
 def list_directory(path, show_details=True):
-    """Liste le contenu d'un répertoire avec des détails optionnels."""
+                                                                       
     entries = []
     
     try:
         items = os.listdir(path)
         
-        # Filtre les fichiers cachés si nécessaire
+                                                  
         if not CONFIG["show_hidden"]:
             items = [item for item in items if not item.startswith('.')]
         
@@ -159,7 +159,7 @@ def list_directory(path, show_details=True):
             if show_details and not is_dir:
                 entry.update(get_file_info(full_path))
             elif show_details:
-                # Pour les dossiers
+                                   
                 try:
                     count = len(os.listdir(full_path))
                     entry["content_count"] = count
@@ -172,7 +172,7 @@ def list_directory(path, show_details=True):
             
             entries.append(entry)
         
-        # Tri
+             
         sort_key = CONFIG["sort_by"]
         reverse = CONFIG["reverse_sort"]
         
@@ -185,7 +185,7 @@ def list_directory(path, show_details=True):
         elif sort_key == "date" and show_details:
             entries.sort(key=lambda x: x.get("modified", datetime.now()), reverse=reverse)
         
-        # Toujours mettre les dossiers en premier, sauf si on trie par type
+                                                                           
         if sort_key != "type":
             entries.sort(key=lambda x: not x["is_dir"])
             
@@ -195,19 +195,19 @@ def list_directory(path, show_details=True):
     return entries
 
 def display_directory_listing(path, entries=None, selected_idx=0, page_size=20):
-    """Affiche le contenu du répertoire avec une interface améliorée et pagination."""
+                                                                                      
     if entries is None:
         entries = list_directory(path)
     
-    # Calcul de la pagination
+                             
     total_entries = len(entries)
-    total_pages = max(1, (total_entries + page_size - 1) // page_size)  # Arrondi au supérieur
+    total_pages = max(1, (total_entries + page_size - 1) // page_size)                        
     current_page = min(max(0, (selected_idx + 1) // page_size), total_pages - 1)
     
     start_idx = current_page * page_size
     end_idx = min(start_idx + page_size, total_entries)
     
-    # En-tête avec le chemin actuel
+                                   
     console.print(Panel(
         Text(f"📂 {os.path.abspath(path)}", style="bold cyan"),
         title="SuperFile Explorer",
@@ -215,28 +215,28 @@ def display_directory_listing(path, entries=None, selected_idx=0, page_size=20):
         border_style="blue"
     ))
     
-    # Tableau des fichiers et dossiers
+                                      
     table = Table(box=box.ROUNDED, show_header=True, header_style="bold cyan", expand=True, show_lines=False)
     
-    # Colonnes
-    table.add_column("", style="cyan", width=3)  # Sélection
-    table.add_column("", width=2)  # Icône
+              
+    table.add_column("", style="cyan", width=3)             
+    table.add_column("", width=2)         
     table.add_column("Nom", style="cyan", no_wrap=True)
     
-    if CONFIG["sort_by"] != "type":  # Si non trié par type, on affiche le type
+    if CONFIG["sort_by"] != "type":                                            
         table.add_column("Type", style="magenta", width=12)
         
-    if CONFIG["sort_by"] not in ["size", "date"]:  # Si non trié par taille ou date, on les affiche
+    if CONFIG["sort_by"] not in ["size", "date"]:                                                  
         table.add_column("Taille", style="green", width=10, justify="right")
         table.add_column("Modifié", style="yellow", width=16)
     else:
-        # Sinon on n'affiche que celle qui n'est pas utilisée pour le tri
+                                                                         
         if CONFIG["sort_by"] != "size":
             table.add_column("Taille", style="green", width=10, justify="right")
         if CONFIG["sort_by"] != "date":
             table.add_column("Modifié", style="yellow", width=16)
     
-    # Ajout de la ligne parent
+                              
     if path != '/':
         icon = "📁"
         parent_path = os.path.dirname(path)
@@ -257,7 +257,7 @@ def display_directory_listing(path, entries=None, selected_idx=0, page_size=20):
                 
         table.add_row(*row, style="dim")
     
-    # Ajout des entrées de la page courante
+                                           
     for idx in range(start_idx, end_idx):
         entry = entries[idx]
         select_marker = "→" if idx == selected_idx else " "
@@ -290,7 +290,7 @@ def display_directory_listing(path, entries=None, selected_idx=0, page_size=20):
     
     console.print(table)
     
-    # Barre d'état
+                  
     disk_usage = shutil.disk_usage(path)
     free_percent = disk_usage.free / disk_usage.total * 100
     
@@ -303,34 +303,34 @@ def display_directory_listing(path, entries=None, selected_idx=0, page_size=20):
     
     console.print(Panel(status, border_style="blue"))
     
-    # Menu d'aide
+                 
     help_text = (
         "[↑↓]: Naviguer • [←→]: Changer page • [Enter]: Ouvrir • [Tab]: Options • "
         "[/]: Rechercher • [h]: Fichiers cachés • [s]: Trier • [f]: Favoris • [q]: Quitter"
     )
     console.print(Text(help_text, style="dim"))
 
-# Amélioration de la fonction interactive_explorer pour gérer la pagination
+                                                                           
 def interactive_explorer(start_path):
-    """Interface interactive d'exploration de fichiers avec pagination."""
+                                                                          
     current_path = os.path.abspath(start_path)
     selected_idx = 0
-    page_size = 20  # Nombre d'éléments par page
+    page_size = 20                              
     
-    # Détermine quel module d'entrée utiliser selon la plateforme
+                                                                 
     if platform.system() == 'Windows':
         import msvcrt
         
         def get_key():
             key = msvcrt.getch()
-            # Touches fléchées sous Windows commencent par 224, puis un second byte
+                                                                                   
             if key == b'\xe0':
                 return {b'H': 'up', b'P': 'down', b'M': 'right', b'K': 'left'}[msvcrt.getch()]
-            # Touches Enter, Tab, etc.
+                                      
             return {b'\r': 'enter', b'\t': 'tab', b'/': 'search', b'h': 'h', 
                    b's': 's', b'r': 'r', b'f': 'f', b'q': 'q', b' ': 'space'}.get(key, None)
     else:
-        # Pour Unix/Linux/MacOS
+                               
         try:
             import tty
             import termios
@@ -341,7 +341,7 @@ def interactive_explorer(start_path):
                 try:
                     tty.setraw(sys.stdin.fileno())
                     ch = sys.stdin.read(1)
-                    # Gestion des séquences d'échappement pour les touches fléchées
+                                                                                   
                     if ch == '\x1b':
                         ch = sys.stdin.read(2)
                         if ch == '[A':
@@ -357,7 +357,7 @@ def interactive_explorer(start_path):
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         except ImportError:
-            # Fallback si tty et termios ne sont pas disponibles
+                                                                
             def get_key():
                 return Prompt.ask("\nAction", choices=["u", "d", "l", "r", "Enter", "Tab", "/", "h", "s", "r", "f", "q"], show_choices=False)
     
@@ -366,47 +366,47 @@ def interactive_explorer(start_path):
         entries = list_directory(current_path)
         total_entries = len(entries)
         
-        # Calcul des limites de page
-        total_pages = max(1, (total_entries + page_size - 1) // page_size)  # Arrondi au supérieur
+                                    
+        total_pages = max(1, (total_entries + page_size - 1) // page_size)                        
         current_page = min(max(0, (selected_idx + 1) // page_size), total_pages - 1)
         
         display_directory_listing(current_path, entries, selected_idx, page_size)
         
-        # Attente d'une touche
+                              
         key = get_key()
         
         if key == 'q':
             break
         elif key == 'up':
-            # Remonter d'une ligne, avec gestion de la ligne "parent"
-            if selected_idx > -1:  # S'il y a une ligne "parent"
+                                                                     
+            if selected_idx > -1:                               
                 selected_idx = max(selected_idx - 1, -1)
             else:
-                selected_idx = -1  # Rester sur la ligne parent
+                selected_idx = -1                              
         elif key == 'down':
-            # Descendre d'une ligne
+                                   
             selected_idx = min(selected_idx + 1, len(entries) - 1)
         elif key == 'left':
-            # Page précédente
+                             
             new_page = max(current_page - 1, 0)
             selected_idx = max(new_page * page_size, -1)
         elif key == 'right':
-            # Page suivante
+                           
             if current_page < total_pages - 1:
                 new_page = min(current_page + 1, total_pages - 1)
                 selected_idx = new_page * page_size
         elif key == 'space':
-            # Page suivante (alternative)
+                                         
             if current_page < total_pages - 1:
                 new_page = min(current_page + 1, total_pages - 1)
                 selected_idx = new_page * page_size
         elif key == 'enter':
-            # Remonter au parent
+                                
             if selected_idx == -1:
                 if current_path != '/':
                     current_path = os.path.dirname(current_path)
                 selected_idx = 0
-            # Ouvrir l'élément sélectionné
+                                          
             elif selected_idx < len(entries):
                 selected = entries[selected_idx]
                 if selected["is_dir"]:
@@ -418,13 +418,13 @@ def interactive_explorer(start_path):
                     input("\n[Appuie sur Entrée pour revenir]")
 
 def view_file(path, highlight=True):
-    """Affiche le contenu d'un fichier avec options avancées."""
+                                                                
     try:
         file_info = get_file_info(path)
         mime_type = file_info["mime_type"]
         size = file_info["size"]
         
-        # En-tête avec info fichier
+                                   
         header = Layout()
         header.split_column(
             Layout(name="title"),
@@ -455,7 +455,7 @@ def view_file(path, highlight=True):
         
         console.print(header)
         
-        # Si c'est un fichier texte
+                                   
         if mime_type and ("text" in mime_type or mime_type in [
             "application/json", "application/xml", "application/javascript", 
             "application/x-python-code", "application/x-sh"
@@ -470,23 +470,23 @@ def view_file(path, highlight=True):
                 else:
                     console.print(Panel(Text(code), border_style="blue"))
             except UnicodeDecodeError:
-                # Si ce n'est pas de l'UTF-8, on propose une vue hexadécimale
+                                                                             
                 console.print("[yellow]Ce fichier contient des données binaires ou utilise un encodage non UTF-8.[/]")
                 if Confirm.ask("Afficher la vue hexadécimale?"):
                     view_hex(path)
-        # Si c'est un fichier image
+                                   
         elif mime_type and "image" in mime_type:
             console.print("[yellow]Les images ne peuvent pas être affichées dans le terminal.[/]")
             if platform.system() == "Windows":
                 if Confirm.ask("Ouvrir avec le visualiseur d'images par défaut?"):
                     os.startfile(path)
-            elif platform.system() == "Darwin":  # macOS
+            elif platform.system() == "Darwin":         
                 if Confirm.ask("Ouvrir avec le visualiseur d'images par défaut?"):
                     subprocess.run(["open", path])
-            else:  # Linux et autres
+            else:                   
                 if Confirm.ask("Ouvrir avec le visualiseur d'images par défaut?"):
                     subprocess.run(["xdg-open", path])
-        # Si c'est un fichier Markdown
+                                      
         elif path.lower().endswith(".md"):
             try:
                 with open(path, 'r', encoding='utf-8') as f:
@@ -495,10 +495,10 @@ def view_file(path, highlight=True):
                 console.print(Panel(md, border_style="blue"))
             except Exception as e:
                 console.print(f"[bold red]Erreur lors de l'affichage du markdown :[/] {e}")
-        # Pour les autres fichiers, afficher la vue hexadécimale
+                                                                
         else:
             console.print(f"[yellow]Ce fichier n'est pas de type texte ({mime_type}).[/]")
-            if size > 1024 * 1024:  # Plus de 1 Mo
+            if size > 1024 * 1024:                
                 if not Confirm.ask(f"Ce fichier est volumineux ({file_info['size_str']}). Continuer?"):
                     return
             if Confirm.ask("Afficher la vue hexadécimale?"):
@@ -507,7 +507,7 @@ def view_file(path, highlight=True):
         console.print(f"[bold red]Erreur :[/] {e}")
 
 def view_hex(path, chunk_size=16, max_bytes=4096):
-    """Affiche une vue hexadécimale d'un fichier."""
+                                                    
     try:
         with open(path, 'rb') as f:
             offset = 0
@@ -532,12 +532,12 @@ def view_hex(path, chunk_size=16, max_bytes=4096):
                     if not chunk:
                         break
                     
-                    # Représentation hex
+                                        
                     hex_view = " ".join(f"{b:02x}" for b in chunk)
                     if len(hex_view) < chunk_size * 3 - 1:
                         hex_view += " " * (chunk_size * 3 - 1 - len(hex_view))
                     
-                    # Représentation ASCII (remplace les caractères non imprimables par des points)
+                                                                                                   
                     ascii_view = "".join(chr(b) if 32 <= b < 127 else "." for b in chunk)
                     
                     table.add_row(f"0x{offset:08x}", hex_view, ascii_view)
@@ -555,7 +555,7 @@ def view_hex(path, chunk_size=16, max_bytes=4096):
         console.print(f"[bold red]Erreur lors de la lecture hexadécimale :[/] {e}")
 
 def search_in_directory(path, query, max_results=100):
-    """Recherche de fichiers dans un répertoire (récursif)."""
+                                                              
     results = []
     query_lower = query.lower()
     
@@ -569,7 +569,7 @@ def search_in_directory(path, query, max_results=100):
         search_task = progress.add_task("[cyan]Recherche en cours...", total=None)
         
         for root, dirs, files in os.walk(path):
-            # Ignorer les répertoires cachés si configuré ainsi
+                                                               
             if not CONFIG["show_hidden"]:
                 dirs[:] = [d for d in dirs if not d.startswith('.')]
                 files = [f for f in files if not f.startswith('.')]
@@ -593,10 +593,10 @@ def search_in_directory(path, query, max_results=100):
             if len(results) >= max_results:
                 break
                 
-            # Mettre à jour la description avec le chemin actuel
+                                                                
             progress.update(search_task, description=f"[cyan]Recherche dans[/] [yellow]{root}[/]")
     
-    # Affichage des résultats
+                             
     if results:
         table = Table(title=f"Résultats de recherche pour '{query}'", show_lines=True)
         table.add_column("Type", style="magenta", width=10)
@@ -615,7 +615,7 @@ def search_in_directory(path, query, max_results=100):
         if len(results) == max_results:
             console.print(f"[yellow]Affichage limité aux {max_results} premiers résultats.[/]")
         
-        # Demander si l'utilisateur veut ouvrir un des résultats
+                                                                
         choice = Prompt.ask(
             "\nEntre le numéro du résultat à ouvrir (ou Entrée pour revenir)",
             default=""
@@ -631,7 +631,7 @@ def search_in_directory(path, query, max_results=100):
     return None
 
 def show_file_stats(path):
-    """Affiche des statistiques détaillées sur un fichier."""
+                                                             
     try:
         stat = os.stat(path)
         file_info = get_file_info(path)
@@ -645,7 +645,7 @@ def show_file_stats(path):
         title = Text(f"{file_info['icon']} {os.path.basename(path)}", style="bold cyan")
         layout["header"].update(Panel(title, subtitle=os.path.dirname(os.path.abspath(path)), border_style="blue"))
         
-        # Détails du fichier
+                            
         details = Table.grid(expand=True)
         details.add_column(style="green")
         details.add_column(style="white")
@@ -658,8 +658,8 @@ def show_file_stats(path):
         details.add_row("Permissions:", oct(stat.st_mode)[-3:])
         details.add_row("Exécutable:", "Oui" if os.access(path, os.X_OK) else "Non")
         
-        # Hashes
-        if os.path.getsize(path) < 100 * 1024 * 1024:  # Limiter aux fichiers < 100 Mo
+                
+        if os.path.getsize(path) < 100 * 1024 * 1024:                                 
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
@@ -679,7 +679,7 @@ def show_file_stats(path):
         input("\n[Appuie sur Entrée pour revenir]")
 
 def show_directory_stats(path):
-    """Affiche des statistiques sur un répertoire."""
+                                                     
     console.print(f"[cyan]Analyse du répertoire[/] [yellow]{path}[/]")
     
     stats = {
@@ -690,8 +690,8 @@ def show_directory_stats(path):
         "largest_files": []
     }
     
-    max_depth = 5  # Limiter la profondeur pour éviter les répertoires trop grands
-    max_files = 1000  # Limiter le nombre de fichiers pour les performances
+    max_depth = 5                                                                 
+    max_files = 1000                                                       
     
     with Progress(
         SpinnerColumn(),
@@ -701,15 +701,15 @@ def show_directory_stats(path):
         task = progress.add_task("[cyan]Analyse en cours...", total=None)
         
         for root, dirs, files in os.walk(path):
-            # Calculer la profondeur relative
+                                             
             rel_path = os.path.relpath(root, path)
             depth = 0 if rel_path == '.' else rel_path.count(os.sep) + 1
             
             if depth > max_depth:
-                dirs.clear()  # Ne pas descendre plus loin
+                dirs.clear()                              
                 continue
                 
-            # Ignorer les répertoires cachés si configuré ainsi
+                                                               
             if not CONFIG["show_hidden"]:
                 dirs[:] = [d for d in dirs if not d.startswith('.')]
                 files = [f for f in files if not f.startswith('.')]
@@ -725,7 +725,7 @@ def show_directory_stats(path):
                     size = os.path.getsize(file_path)
                     stats["total_size"] += size
                     
-                    # Compter les extensions
+                                            
                     ext = os.path.splitext(file)[1].lower()
                     if ext in stats["extensions"]:
                         stats["extensions"][ext]["count"] += 1
@@ -733,17 +733,17 @@ def show_directory_stats(path):
                     else:
                         stats["extensions"][ext] = {"count": 1, "size": size}
                     
-                    # Garder trace des plus gros fichiers
+                                                         
                     stats["largest_files"].append((file_path, size))
                     stats["largest_files"].sort(key=lambda x: x[1], reverse=True)
-                    stats["largest_files"] = stats["largest_files"][:10]  # Garder les 10 plus gros
+                    stats["largest_files"] = stats["largest_files"][:10]                           
                 except Exception:
                     pass
                     
             if stats["total_files"] > max_files:
                 break
     
-    # Affichage des résultats
+                             
     layout = Layout()
     layout.split_column(
         Layout(name="header"),
@@ -754,7 +754,7 @@ def show_directory_stats(path):
     title = Text(f"📊 Statistiques du répertoire: {os.path.basename(path)}", style="bold cyan")
     layout["header"].update(Panel(title, subtitle=os.path.dirname(os.path.abspath(path)), border_style="blue"))
     
-    # Tableau des statistiques générales
+                                        
     stats_table = Table.grid(expand=True)
     stats_table.add_column(style="green")
     stats_table.add_column(style="white")
@@ -771,7 +771,7 @@ def show_directory_stats(path):
         format_size(stats["total_size"] / stats["total_files"]) if stats["total_files"] > 0 else "N/A"
     )
     
-    # Top 5 des extensions
+                          
     top_extensions = sorted(
         stats["extensions"].items(), 
         key=lambda x: x[1]["size"], 
@@ -788,7 +788,7 @@ def show_directory_stats(path):
     
     layout["stats"].update(Panel(stats_table, title="Résumé", border_style="blue"))
     
-    # Tableau des plus gros fichiers
+                                    
     largest_table = Table(title="Top 10 des plus gros fichiers", show_header=True)
     largest_table.add_column("Nom", style="cyan")
     largest_table.add_column("Taille", style="green", justify="right")
@@ -810,7 +810,7 @@ def show_directory_stats(path):
     input("\n[Appuie sur Entrée pour revenir]")
 
 def main():
-    """Fonction principale du programme."""
+                                           
     parser = argparse.ArgumentParser(description="SuperFile Explorer - Navigateur de fichiers avancé")
     parser.add_argument("path", nargs="?", default=os.getcwd(), help="Chemin du répertoire à explorer")
     parser.add_argument("--file", help="Ouvrir directement un fichier en mode visualisation")
@@ -820,16 +820,16 @@ def main():
     
     args = parser.parse_args()
     
-    # Appliquer les options de configuration
+                                            
     if args.theme:
         CONFIG["theme"] = args.theme
     if args.show_hidden:
         CONFIG["show_hidden"] = True
     
-    # Initialiser mimetypes
+                           
     mimetypes.init()
     
-    # Visualiser directement un fichier
+                                       
     if args.file:
         if os.path.isfile(args.file):
             view_file(args.file)
@@ -837,7 +837,7 @@ def main():
             console.print(f"[bold red]Erreur :[/] Le fichier {args.file} n'existe pas ou n'est pas accessible.")
         return
     
-    # Explorer un répertoire
+                            
     if os.path.isdir(args.path):
         try:
             interactive_explorer(args.path)
@@ -847,24 +847,24 @@ def main():
         console.print(f"[bold red]Erreur :[/] Le répertoire {args.path} n'existe pas ou n'est pas accessible.")
 
 def interactive_explorer(start_path):
-    """Interface interactive d'exploration de fichiers."""
+                                                          
     current_path = os.path.abspath(start_path)
     selected_idx = 0
     
-    # Détermine quel module d'entrée utiliser selon la plateforme
+                                                                 
     if platform.system() == 'Windows':
         import msvcrt
         
         def get_key():
             key = msvcrt.getch()
-            # Touches fléchées sous Windows commencent par 224, puis un second byte
+                                                                                   
             if key == b'\xe0':
                 return {b'H': 'up', b'P': 'down', b'M': 'right', b'K': 'left'}[msvcrt.getch()]
-            # Touches Enter, Tab, etc.
+                                      
             return {b'\r': 'enter', b'\t': 'tab', b'/': 'search', b'h': 'h', 
                    b's': 's', b'r': 'r', b'f': 'f', b'q': 'q'}.get(key, None)
     else:
-        # Pour Unix/Linux/MacOS
+                               
         try:
             import tty
             import termios
@@ -875,7 +875,7 @@ def interactive_explorer(start_path):
                 try:
                     tty.setraw(sys.stdin.fileno())
                     ch = sys.stdin.read(1)
-                    # Gestion des séquences d'échappement pour les touches fléchées
+                                                                                   
                     if ch == '\x1b':
                         ch = sys.stdin.read(2)
                         if ch == '[A':
@@ -891,7 +891,7 @@ def interactive_explorer(start_path):
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         except ImportError:
-            # Fallback si tty et termios ne sont pas disponibles
+                                                                
             def get_key():
                 return Prompt.ask("\nAction", choices=["u", "d", "Enter", "Tab", "/", "h", "s", "r", "f", "q"], show_choices=False)
     
@@ -900,25 +900,25 @@ def interactive_explorer(start_path):
         entries = list_directory(current_path)
         display_directory_listing(current_path, entries, selected_idx)
         
-        # Message d'aide pour la navigation
+                                           
         console.print("\n[dim]Utilisez les flèches pour naviguer, Entrée pour ouvrir, Tab pour options, q pour quitter[/dim]")
         
-        # Attente d'une touche
+                              
         key = get_key()
         
         if key == 'q':
             break
         elif key == 'up':
-            selected_idx = max(selected_idx - 1, -1)  # -1 pour la ligne parent
+            selected_idx = max(selected_idx - 1, -1)                           
         elif key == 'down':
             selected_idx = min(selected_idx + 1, len(entries) - 1)
         elif key == 'enter':
-            # Remonter au parent
+                                
             if selected_idx == -1:
                 if current_path != '/':
                     current_path = os.path.dirname(current_path)
                 selected_idx = 0
-            # Ouvrir l'élément sélectionné
+                                          
             else:
                 selected = entries[selected_idx]
                 if selected["is_dir"]:
@@ -929,7 +929,7 @@ def interactive_explorer(start_path):
                     view_file(selected["path"])
                     input("\n[Appuie sur Entrée pour revenir]")
         elif key == 'tab':
-            # Menu d'options
+                            
             console.print("\n")
             options = ["Statistiques", "Vue hexadécimale", "Propriétés", "Copier", "Déplacer", "Supprimer", "Retour"]
             option = Prompt.ask("Option", choices=options)
@@ -955,7 +955,7 @@ def interactive_explorer(start_path):
                 else:
                     show_file_stats(entries[selected_idx]["path"])
         elif key == 'search':
-            # Recherche
+                       
             console.print("\n")
             query = Prompt.ask("Rechercher")
             if query:
@@ -969,18 +969,18 @@ def interactive_explorer(start_path):
                         parent_dir = os.path.dirname(result_path)
                         current_path = parent_dir
                         
-                        # Trouver l'index du fichier dans le nouveau répertoire
+                                                                               
                         new_entries = list_directory(parent_dir)
                         for i, entry in enumerate(new_entries):
                             if entry["path"] == result_path:
                                 selected_idx = i
                                 break
         elif key == 'h':
-            # Afficher/masquer les fichiers cachés
+                                                  
             CONFIG["show_hidden"] = not CONFIG["show_hidden"]
             selected_idx = 0
         elif key == 's':
-            # Options de tri
+                            
             console.print("\n")
             sort_options = ["name", "type", "size", "date"]
             sort_by = Prompt.ask("Trier par", choices=sort_options)
@@ -993,10 +993,10 @@ def interactive_explorer(start_path):
             
             selected_idx = 0
         elif key == 'r':
-            # Rafraîchir
+                        
             selected_idx = 0
         elif key == 'f':
-            # Gestion des favoris
+                                 
             if current_path in CONFIG["favorites"]:
                 CONFIG["favorites"].remove(current_path)
                 console.print(f"[green]Chemin supprimé des favoris.[/]")
