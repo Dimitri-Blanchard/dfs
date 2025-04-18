@@ -1,11 +1,11 @@
-import wsf
-from wsf import core                                                       
-from wsf import wsf                                                       
+import dfs
+from dfs import core                                                       
+from dfs import dfs                                                       
 
 def demonstrate_usage():
-    print("--- Début de la démonstration de wsf ---")
+    print("--- Début de la démonstration de dfs ---")
                                      
-    print("\n[Exemple 1 : Appel d'une fonction de wsf.core]")
+    print("\n[Exemple 1 : Appel d'une fonction de dfs.core]")
     try:             
         input_data_1 = "Données d'entrée pour core"
         parametre_1 = {"option": True, "valeur": 123}
@@ -17,12 +17,12 @@ def demonstrate_usage():
         print(f"  Résultat: {resultat_core}")
         
     except AttributeError:
-        print("  ERREUR: La fonction 'example_core_function' n'existe pas dans wsf.core.")
+        print("  ERREUR: La fonction 'example_core_function' n'existe pas dans dfs.core.")
         print("  Veuillez adapter cet exemple avec les vrais noms de votre librairie.")
     except Exception as e:
         print(f"  Une erreur inattendue est survenue dans l'Exemple 1: {e}")
                                                            
-    print("\n[Exemple 2 : Instanciation et utilisation d'une classe de wsf.core]")
+    print("\n[Exemple 2 : Instanciation et utilisation d'une classe de dfs.core]")
     try:                                                        
         instance = core.ExampleCoreClass()                                     
         print(f"  Classe: core.ExampleCoreClass")
@@ -41,27 +41,27 @@ def demonstrate_usage():
     except Exception as e:
         print(f"  Une erreur inattendue est survenue dans l'Exemple 2: {e}")
                                   
-    print("\n[Exemple 3 : Appel d'une fonction de wsf.wsf]")
+    print("\n[Exemple 3 : Appel d'une fonction de dfs.dfs]")
     try:                  
         input_data_3 = 5.5
-        resultat_wsf = wsf.example_wsf_function(input_data_3)
+        resultat_dfs = dfs.example_dfs_function(input_data_3)
 
-        print(f"  Fonction: wsf.example_wsf_function")
+        print(f"  Fonction: dfs.example_dfs_function")
         print(f"  Entrée: {input_data_3}")
-        print(f"  Résultat: {resultat_wsf}")
+        print(f"  Résultat: {resultat_dfs}")
 
     except AttributeError:
-        print("  ERREUR: La fonction 'example_wsf_function' n'existe pas dans wsf.wsf.")
+        print("  ERREUR: La fonction 'example_dfs_function' n'existe pas dans dfs.dfs.")
         print("  Veuillez adapter cet exemple avec les vrais noms de votre librairie.")
     except Exception as e:
         print(f"  Une erreur inattendue est survenue dans l'Exemple 3: {e}")
 
-    print("\n[Exemple 4 : Accéder à __version__ (si défini dans wsf/__init__.py)]")
+    print("\n[Exemple 4 : Accéder à __version__ (si défini dans dfs/__init__.py)]")
     try:                                           
-        version = wsf.__version__
-        print(f"  Version de wsf installée : {version}")
+        version = dfs.__version__
+        print(f"  Version de dfs installée : {version}")
     except AttributeError:
-        print("  L'attribut '__version__' n'est pas défini dans wsf/__init__.py.")
+        print("  L'attribut '__version__' n'est pas défini dans dfs/__init__.py.")
         
     print("\n--- Fin de la démonstration ---")
 
