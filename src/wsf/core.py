@@ -1,1 +1,1 @@
-from .wsf import main
+from .dfs import main
