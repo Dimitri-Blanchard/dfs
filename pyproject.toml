@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sf"
+version = "0.1.0"
+authors = [
+  { name="Blanchard Dimitri", email="dimitriblanchard@proton.me" },
+]
+description = "The best library for viewing files over multiple languages."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Filesystems",
+    "Environment :: Console",
+]
+dependencies = [
+    "rich>=10.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Dimitri-Blanchard/sf"
+
+[project.scripts]
+sf = "sf.core:main"
