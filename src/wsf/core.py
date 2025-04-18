@@ -1,0 +1,1 @@
+from .wsf import main
