@@ -1,10 +1,10 @@
-# ✨ ShowFile (sf) 📂
+# ✨ ShowFile (wsf) 📂
 
 [![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Made with Rich](https://img.shields.io/badge/Made%20with-Rich-cyan.svg)](https://github.com/Textualize/rich)
 
-ShowFile (`sf`) is a command-line file browser and viewer featuring a rich terminal interface powered by the `rich` library. It provides an enhanced alternative to standard commands like `ls`, `cat`, and `dir` for navigating directories and previewing file contents.
+ShowFile (`wsf`) is a command-line file browser and viewer featuring a rich terminal interface powered by the `rich` library. It provides an enhanced alternative to standard commands like `ls`, `cat`, and `dir` for navigating directories and previewing file contents.
 
 ---
 
@@ -33,17 +33,17 @@ ShowFile (`sf`) is a command-line file browser and viewer featuring a rich termi
 ## 🚀 Installation
 
 1.  **Prerequisites:** Requires Python 3.x 🐍.
-2.  **Obtain the script:** Download the `sf.py` file.
+2.  **Obtain the script:** Download the `wsf.py` file.
 3.  **Install dependencies:** The primary dependency is `rich`.
     ```bash
     pip install rich
     ```
     *(Using a virtual environment is recommended: `python -m venv venv && source venv/bin/activate`)*
 4.  **(Optional) Make globally accessible:**
-    * Ensure the script is executable: `chmod +x sf.py`.
-    * Move `sf.py` to a directory in your system's `PATH`, renaming it to `sf`:
+    * Ensure the script is executable: `chmod +x wsf.py`.
+    * Move `wsf.py` to a directory in your system's `PATH`, renaming it to `wsf`:
         ```bash
-        mv sf.py ~/.local/bin/sf
+        mv wsf.py ~/.local/bin/wsf
         # Ensure ~/.local/bin is in your PATH environment variable
         ```
 
@@ -53,19 +53,19 @@ ShowFile (`sf`) is a command-line file browser and viewer featuring a rich termi
 
 If installed globally (step 4 above), invoke using:
 
-Enter a Folder with SF:
+Enter a Folder with wsf:
 ```bash
-sf ([FOLDER PATH])
+wsf ([FOLDER PATH])
 ```
 
 View a File:
 ```bash
-sf --file [FILE PATH]
+wsf --file [FILE PATH]
 ```
 
-Enter SF menu's:
+Enter wsf menu's:
 ```bash
-sf
+wsf
 ```
 
 Key	Action		
@@ -79,13 +79,13 @@ Key	Action
 * `s`	Change sorting criteria (name, type, size, date)		
 * `r`	Refresh the current view		
 * `f`	Toggle favorite status (basic implementation)⭐		
-* `q`	Quit ShowFile (sf)
+* `q`	Quit ShowFile (wsf)
 
 ---
 
 ## ⚙️ Configuration
 
-Default settings (theme, hidden file visibility, sort order) are defined in the CONFIG dictionary at the beginning of the sf.py script. These can be modified directly in the source file.
+Default settings (theme, hidden file visibility, sort order) are defined in the CONFIG dictionary at the beginning of the wsf.py script. These can be modified directly in the source file.
 
 ```
 CONFIG = {
