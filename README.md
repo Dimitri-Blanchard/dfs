@@ -121,3 +121,9 @@ Contributions are welcome. Please follow standard practices such as:
 ## 📜 License
 
 This project is distributed under the MIT License (confirm or specify actual license).
+
+## 🌟 Github 🌟
+
+![](https://avatars.githubusercontent.com/u/186400865?s=400&u=7b3aa925f867346d26819eb152c9075d87d2beb1&v=4)
+
+https://github.com/Dimitri-Blanchard/wsf/
