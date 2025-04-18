@@ -1,10 +1,10 @@
-# ✨ DirFileShow (dfs) 📂
+# ✨ fileShow (fshow) 📂
 
 [![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Made with Rich](https://img.shields.io/badge/Made%20with-Rich-cyan.svg)](https://github.com/Textualize/rich)
 
-DirFileShow (`dfs`) is a command-line file browser and viewer featuring a rich terminal interface powered by the `rich` library. It provides an enhanced alternative to standard commands like `ls`, `cat`, and `dir` for navigating directories and previewing file contents.
+DirFileShow (`fshow`) is a command-line file browser and viewer featuring a rich terminal interface powered by the `rich` library. It provides an enhanced alternative to standard commands like `ls`, `cat`, and `dir` for navigating directories and previewing file contents.
 
 ---
 
@@ -33,17 +33,17 @@ DirFileShow (`dfs`) is a command-line file browser and viewer featuring a rich t
 ## 🚀 Installation
 
 1.  **Prerequisites:** Requires Python 3.x 🐍.
-2.  **Obtain the script:** Download the `dfs.py` file.
+2.  **Obtain the script:** Download the `fshow.py` file.
 3.  **Install dependencies:** The primary dependency is `rich`.
     ```bash
     pip install rich
     ```
     *(Using a virtual environment is recommended: `python -m venv venv && source venv/bin/activate`)*
 4.  **(Optional) Make globally accessible:**
-    * Ensure the script is executable: `chmod +x dfs.py`.
-    * Move `dfs.py` to a directory in your system's `PATH`, renaming it to `dfs`:
+    * Ensure the script is executable: `chmod +x fshow.py`.
+    * Move `fshow.py` to a directory in your system's `PATH`, renaming it to `fshow`:
         ```bash
-        mv dfs.py ~/.local/bin/dfs
+        mv fshow.py ~/.local/bin/fshow
         # Ensure ~/.local/bin is in your PATH environment variable
         ```
 
@@ -53,19 +53,19 @@ DirFileShow (`dfs`) is a command-line file browser and viewer featuring a rich t
 
 If installed globally (step 4 above), invoke using:
 
-Enter a Folder with dfs:
+Enter a Folder with fshow:
 ```bash
-dfs ([FOLDER PATH])
+fshow ([FOLDER PATH])
 ```
 
 View a File:
 ```bash
-dfs --file [FILE PATH]
+fshow --file [FILE PATH]
 ```
 
-Enter dfs menu's:
+Enter fshow menu's:
 ```bash
-dfs
+fshow
 ```
 
 Key	Action		
@@ -79,13 +79,13 @@ Key	Action
 * `s`	Change sorting criteria (name, type, size, date)		
 * `r`	Refresh the current view		
 * `f`	Toggle favorite status (basic implementation)⭐		
-* `q`	Quit DirFileShow (dfs)
+* `q`	Quit DirFileShow (fshow)
 
 ---
 
 ## ⚙️ Configuration
 
-Default settings (theme, hidden file visibility, sort order) are defined in the CONFIG dictionary at the beginning of the dfs.py script. These can be modified directly in the source file.
+Default settings (theme, hidden file visibility, sort order) are defined in the CONFIG dictionary at the beginning of the fshow.py script. These can be modified directly in the source file.
 
 ```
 CONFIG = {
@@ -126,4 +126,4 @@ This project is distributed under the MIT License (confirm or specify actual lic
 
 ![](https://avatars.githubusercontent.com/u/186400865?s=400&u=7b3aa925f867346d26819eb152c9075d87d2beb1&v=4)
 
-https://github.com/Dimitri-Blanchard/dfs/
+https://github.com/Dimitri-Blanchard/fshow/
