@@ -1,1 +1,1 @@
-from .fshow import main.
+from .fshow import main
